@@ -1,4 +1,4 @@
-# {NAME-OF-THE-PROJECT}
+# Echoes of light
 
 mr19099 - Tanja Gavric
 {PROJECT DESCRIPTION}

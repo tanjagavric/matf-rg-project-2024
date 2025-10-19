@@ -5,4 +5,4 @@ namespace app {
     void MyApp::app_setup() {
         spdlog::info("Hello, MyApp::app_setup");
     }
-}
+} // app
