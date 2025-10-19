@@ -1,4 +1,4 @@
-#include "app/MyApp.hpp"
+#include "MyApp.hpp"
 #include <spdlog/spdlog.h>
 
 namespace app {
