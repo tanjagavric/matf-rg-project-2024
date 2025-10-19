@@ -40,6 +40,30 @@ namespace app {
         backpack->draw(shader);
     }
 
+    void MainController::update_camera() {
+        auto platform = get<engine::platform::PlatformController>();
+        auto graphics = get<engine::graphics::GraphicsController>();
+        auto camera   = graphics->camera();
+        float dt      = platform->dt();
+
+        if (platform->key(engine::platform::KEY_W).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::FORWARD, dt);
+        }
+        if (platform->key(engine::platform::KEY_S).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::BACKWARD, dt);
+        }
+        if (platform->key(engine::platform::KEY_A).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::LEFT, dt);
+        }
+        if (platform->key(engine::platform::KEY_D).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::RIGHT, dt);
+        }
+    }
+
+    void MainController::update() {
+        update_camera();
+    }
+
     void MainController::begin_draw() {
         engine::graphics::OpenGL::clear_buffers();
     }
