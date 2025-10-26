@@ -1,14 +1,15 @@
 {
   "resources": {
     "models": {
-      "backpack": {
-        "path": "backpack/backpack.obj"
+      "cave": {
+        "path": "cave/cave.obj",
+        "flip_uvs": true
       }
     }
   },
   "window": {
     "height": 600,
-    "title": "Hello, window!",
+    "title": "Echoes of Light",
     "width": 800
   }
 }

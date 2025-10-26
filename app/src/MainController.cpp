@@ -24,6 +24,10 @@ namespace app {
         auto platform = get<engine::platform::PlatformController>();
         platform->register_platform_event_observer(std::make_unique<MainPlatformEventObserver>());
         engine::graphics::OpenGL::enable_depth_testing();
+
+        auto graphics            = get<engine::graphics::GraphicsController>();
+        auto camera              = graphics->camera();
+        camera->MouseSensitivity = 0.3f;
     }
 
     bool MainController::loop() {
@@ -32,24 +36,6 @@ namespace app {
             return false;
         }
         return true;
-    }
-
-    void MainController::draw_backpack() {
-        //Model
-        auto resources                     = get<engine::resources::ResourcesController>();
-        auto graphics                      = get<engine::graphics::GraphicsController>();
-        engine::resources::Model *backpack = resources->model("backpack");
-        //Shader
-        engine::resources::Shader *shader = resources->shader("basic");
-
-        shader->use();
-        shader->set_mat4("projection", graphics->projection_matrix<>());
-        shader->set_mat4("view", graphics->camera()->view_matrix());
-        glm::mat4 model = glm::mat4(1.0f);
-        model           = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
-        model           = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
-        shader->set_mat4("model", model);
-        backpack->draw(shader);
     }
 
     void MainController::update_camera() {
@@ -76,12 +62,27 @@ namespace app {
         update_camera();
     }
 
+    void MainController::draw_cave() {
+        auto resources                    = get<engine::resources::ResourcesController>();
+        auto graphics                     = get<engine::graphics::GraphicsController>();
+        engine::resources::Model *cave    = resources->model("cave");
+        engine::resources::Shader *shader = resources->shader("basic");
+
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix<>());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+        glm::mat4 model = glm::mat4(1.0f);
+        model           = glm::scale(model, glm::vec3(5.0f));
+        shader->set_mat4("model", model);
+        cave->draw(shader);
+    }
+
     void MainController::begin_draw() {
         engine::graphics::OpenGL::clear_buffers();
     }
 
     void MainController::draw() {
-        draw_backpack();
+        draw_cave();
     }
 
     void MainController::end_draw() {
