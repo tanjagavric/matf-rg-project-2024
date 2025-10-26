@@ -81,8 +81,18 @@ namespace app {
         engine::graphics::OpenGL::clear_buffers();
     }
 
+    void MainController::draw_skybox() {
+        auto resources = get<engine::resources::ResourcesController>();
+        auto skybox    = resources->skybox("day_skybox");
+
+        auto shader   = resources->shader("skybox");
+        auto graphics = get<engine::graphics::GraphicsController>();
+        graphics->draw_skybox(shader, skybox);
+    }
+
     void MainController::draw() {
         draw_cave();
+        draw_skybox();
     }
 
     void MainController::end_draw() {

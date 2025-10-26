@@ -20,6 +20,8 @@ namespace app {
 
         void begin_draw() override;
 
+        void draw_skybox();
+
         void draw() override;
 
         void end_draw() override;
