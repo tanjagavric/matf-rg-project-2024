@@ -5,10 +5,9 @@ mr19099 - Tanja Gavric
 
 ## Controls
 
-{BUTTON1} -> {ACTION1}  
-{BUTTON2} -> {ACTION2}  
-...  
-{BUTTONN} -> {ACTIONN}
+W, A, S, D -> Move camera
+
+ESC -> Exit app
 
 ## Features
 
@@ -38,12 +37,13 @@ mr19099 - Tanja Gavric
 
 ## Models:
 
-[link1]   
-[link2]
+Cave [ https://www.fab.com/listings/9f3c22f3-cd5a-40ef-8a8d-768b46d7fda4 ]
 
 ## Textures
 
 [link1]  
 [link2]
 
-{OTHER-RESOURCES}
+## Skyboxes
+
+Day and night skybox [ https://www.planetminecraft.com/texture-pack/legend-of-zelda-breath-of-the-wild-sky-background/ ]

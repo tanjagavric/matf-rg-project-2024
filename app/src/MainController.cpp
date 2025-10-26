@@ -4,10 +4,12 @@
 
 #include "MainController.hpp"
 
+#include <WorldBounds.hpp>
 #include <engine/graphics/GraphicsController.hpp>
 #include <engine/graphics/OpenGL.hpp>
 #include <engine/platform/PlatformController.hpp>
 #include <engine/resources/ResourcesController.hpp>
+#include <spdlog/spdlog.h>
 
 namespace app {
     class MainPlatformEventObserver : public engine::platform::PlatformEventObserver {
@@ -28,6 +30,9 @@ namespace app {
         auto graphics            = get<engine::graphics::GraphicsController>();
         auto camera              = graphics->camera();
         camera->MouseSensitivity = 0.3f;
+
+        m_world_bounds = WorldBounds({-2.5f, 0.0f, -11.0f},
+                                     {2.5f, 3.0f, 8.0f});
     }
 
     bool MainController::loop() {
@@ -56,9 +61,15 @@ namespace app {
         if (platform->key(engine::platform::KEY_D).is_down()) {
             camera->move_camera(engine::graphics::Camera::Movement::RIGHT, dt);
         }
+
+        m_world_bounds.clamp_position(camera->Position);
     }
 
     void MainController::update() {
+        auto platform = get<engine::platform::PlatformController>();
+        if (platform->key(engine::platform::KEY_E).state() == engine::platform::Key::State::JustPressed) {
+            on_puzzle_solved();
+        }
         update_camera();
     }
 
@@ -72,7 +83,7 @@ namespace app {
         shader->set_mat4("projection", graphics->projection_matrix<>());
         shader->set_mat4("view", graphics->camera()->view_matrix());
         glm::mat4 model = glm::mat4(1.0f);
-        model           = glm::scale(model, glm::vec3(5.0f));
+        model           = glm::scale(model, glm::vec3(3.0f));
         shader->set_mat4("model", model);
         cave->draw(shader);
     }
@@ -98,5 +109,13 @@ namespace app {
     void MainController::end_draw() {
         auto platform = get<engine::platform::PlatformController>();
         platform->swap_buffers();
+    }
+
+    void MainController::on_puzzle_solved() {
+        spdlog::info("Puzzle solved!");
+        glm::vec3 current_min = m_world_bounds.min_bound();
+        glm::vec3 current_max = m_world_bounds.max_bound();
+        current_min.z -= 10.0f;
+        m_world_bounds.set_bounds(current_min, current_max);
     }
 } // app
