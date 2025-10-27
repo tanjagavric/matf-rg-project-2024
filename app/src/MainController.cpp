@@ -74,13 +74,17 @@ namespace app {
     }
 
     void MainController::setup_point_lights(engine::resources::Shader *shader) {
+        glm::vec3 torch_ambient  = glm::vec3(0.2f, 0.15f, 0.05f); // Dim orange
+        glm::vec3 torch_diffuse  = glm::vec3(1.5f, 0.9f, 0.3f);   // Bright orange
+        glm::vec3 torch_specular = glm::vec3(1.0f, 0.8f, 0.4f);   // Warm highlight
+
         for (int i = 0; i < 4; i++) {
             std::string prefix = "pointLights[" + std::to_string(i) + "]";
 
             shader->set_vec3(prefix + ".position", m_point_light_positions[i]);
-            shader->set_vec3(prefix + ".ambient", glm::vec3(0.6f));
-            shader->set_vec3(prefix + ".diffuse", glm::vec3(8.0f));
-            shader->set_vec3(prefix + ".specular", glm::vec3(0.1f));
+            shader->set_vec3(prefix + ".ambient", torch_ambient);
+            shader->set_vec3(prefix + ".diffuse", torch_diffuse);
+            shader->set_vec3(prefix + ".specular", torch_specular);
             shader->set_float(prefix + ".constant", 1.0f);
             shader->set_float(prefix + ".linear", 0.5f);
             shader->set_float(prefix + ".quadratic", 1.0f);
@@ -104,9 +108,11 @@ namespace app {
 
         shader->set_vec3("spotLight.position", graphics->camera()->Position);
         shader->set_vec3("spotLight.direction", graphics->camera()->Front);
-        shader->set_vec3("spotLight.ambient", glm::vec3(0.2f));
-        shader->set_vec3("spotLight.diffuse", glm::vec3(1.0f));
+
+        shader->set_vec3("spotLight.ambient", glm::vec3(0.6f));
+        shader->set_vec3("spotLight.diffuse", glm::vec3(3.0f));
         shader->set_vec3("spotLight.specular", glm::vec3(0.5f));
+
         shader->set_float("spotLight.constant", 1.0f);
         shader->set_float("spotLight.linear", 0.09f);
         shader->set_float("spotLight.quadratic", 0.032f);
