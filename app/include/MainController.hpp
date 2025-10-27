@@ -6,6 +6,7 @@
 #define MAINCONTROLLER_HPP
 #include <WorldBounds.hpp>
 #include <engine/core/Controller.hpp>
+#include <engine/resources/Shader.hpp>
 
 namespace app {
     class MainController : public engine::core::Controller {
@@ -17,11 +18,15 @@ namespace app {
 
         void update() override;
 
+        void setup_point_lights(engine::resources::Shader *shader);
+
         void draw_cave();
 
         void begin_draw() override;
 
         void draw_skybox();
+
+        void draw_torches();
 
         void draw() override;
 
@@ -36,6 +41,12 @@ namespace app {
 
     private:
         WorldBounds m_world_bounds;
+        std::array<glm::vec3, 4> m_point_light_positions = {
+            glm::vec3(-3.7f, 1.2f, -10.0f),
+            glm::vec3(-3.5f, 1.3f, 2.0f),
+            glm::vec3(4.6f, 1.1f, -6.0f),
+            glm::vec3(3.3f, 1.4f, 5.0f)
+        };
     };
 } // app
 

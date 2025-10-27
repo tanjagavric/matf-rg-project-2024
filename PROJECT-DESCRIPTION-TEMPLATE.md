@@ -13,8 +13,8 @@ ESC -> Exit app
 
 ### Fundamental:
 
-[ ] Model with lighting
-[ ] Two types of lighting with customizable colors and movement through GUI or ACTIONS
+[ X ] Model with lighting
+[ X ] Two types of lighting with customizable colors and movement through GUI or ACTIONS
 [ ] {ACTION_X} --- AFTER_M_SECONDS---Triggers---> {EVENT_A} ---> AFTER_N_SECONDS---Triggers---> {EVENT_B}
 
 ### Group A:
@@ -33,11 +33,12 @@ ESC -> Exit app
 
 ### Engine improvement:
 
-[ ] ...
+[ X ] Added emissive texture type
 
 ## Models:
 
 Cave [ https://www.fab.com/listings/9f3c22f3-cd5a-40ef-8a8d-768b46d7fda4 ]
+Torch [ https://sketchfab.com/3d-models/torch-homemade-burning-5e478d2d48d04ca7ae7426430192698f ]
 
 ## Textures
 

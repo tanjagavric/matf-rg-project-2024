@@ -4,6 +4,10 @@
       "cave": {
         "path": "cave/cave.obj",
         "flip_uvs": true
+      },
+      "torch": {
+        "path": "torch/scene.gltf",
+        "flip_uvs": true
       }
     }
   },
