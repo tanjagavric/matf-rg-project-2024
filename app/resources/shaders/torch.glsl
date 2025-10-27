@@ -31,11 +31,16 @@ in vec2 TexCoords;
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_emissive1;
+uniform bool lightOn;
 
 void main()
 {
     vec3 baseColor = texture(texture_diffuse1, TexCoords).rgb;
-    vec3 emissive = texture(texture_emissive1, TexCoords).rgb;
+
+    vec3 emissive = vec3(0.0);
+    if (lightOn) {
+        emissive = texture(texture_emissive1, TexCoords).rgb;
+    }
 
     vec3 result = baseColor + emissive;
 

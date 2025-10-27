@@ -33,6 +33,11 @@ namespace app {
 
         m_world_bounds = WorldBounds({-2.5f, 0.0f, -13.0f},
                                      {2.5f, 2.5f, 7.5f});
+
+        m_light_manager.add_point_light(glm::vec3(-3.7f, 1.2f, -10.0f));
+        m_light_manager.add_point_light(glm::vec3(-3.5f, 1.3f, 2.0f));
+        m_light_manager.add_point_light(glm::vec3(4.6f, 1.1f, -6.0f));
+        m_light_manager.add_point_light(glm::vec3(3.3f, 1.4f, 5.0f));
     }
 
     bool MainController::loop() {
@@ -67,28 +72,14 @@ namespace app {
 
     void MainController::update() {
         auto platform = get<engine::platform::PlatformController>();
+        auto graphics = get<engine::graphics::GraphicsController>();
+        m_light_manager.set_spot_light_position(graphics->camera()->Position);
+        m_light_manager.set_spot_light_direction(graphics->camera()->Front);
+
         if (platform->key(engine::platform::KEY_E).state() == engine::platform::Key::State::JustPressed) {
             on_puzzle_solved();
         }
         update_camera();
-    }
-
-    void MainController::setup_point_lights(engine::resources::Shader *shader) {
-        glm::vec3 torch_ambient  = glm::vec3(0.2f, 0.15f, 0.05f); // Dim orange
-        glm::vec3 torch_diffuse  = glm::vec3(1.5f, 0.9f, 0.3f);   // Bright orange
-        glm::vec3 torch_specular = glm::vec3(1.0f, 0.8f, 0.4f);   // Warm highlight
-
-        for (int i = 0; i < 4; i++) {
-            std::string prefix = "pointLights[" + std::to_string(i) + "]";
-
-            shader->set_vec3(prefix + ".position", m_point_light_positions[i]);
-            shader->set_vec3(prefix + ".ambient", torch_ambient);
-            shader->set_vec3(prefix + ".diffuse", torch_diffuse);
-            shader->set_vec3(prefix + ".specular", torch_specular);
-            shader->set_float(prefix + ".constant", 1.0f);
-            shader->set_float(prefix + ".linear", 0.5f);
-            shader->set_float(prefix + ".quadratic", 1.0f);
-        }
     }
 
     void MainController::draw_cave() {
@@ -100,24 +91,12 @@ namespace app {
         shader->use();
         shader->set_mat4("projection", graphics->projection_matrix<>());
         shader->set_mat4("view", graphics->camera()->view_matrix());
+
         glm::mat4 model = glm::mat4(1.0f);
         model           = glm::scale(model, glm::vec3(3.0f));
         shader->set_mat4("model", model);
 
-        setup_point_lights(shader);
-
-        shader->set_vec3("spotLight.position", graphics->camera()->Position);
-        shader->set_vec3("spotLight.direction", graphics->camera()->Front);
-
-        shader->set_vec3("spotLight.ambient", glm::vec3(0.6f));
-        shader->set_vec3("spotLight.diffuse", glm::vec3(3.0f));
-        shader->set_vec3("spotLight.specular", glm::vec3(0.5f));
-
-        shader->set_float("spotLight.constant", 1.0f);
-        shader->set_float("spotLight.linear", 0.09f);
-        shader->set_float("spotLight.quadratic", 0.032f);
-        shader->set_float("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-        shader->set_float("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+        m_light_manager.setup_shader(shader);
 
         shader->set_vec3("viewPos", graphics->camera()->Position);
         shader->set_float("shininess", 4.0f);
@@ -154,8 +133,9 @@ namespace app {
         shader->set_mat4("projection", graphics->projection_matrix<>());
         shader->set_mat4("view", graphics->camera()->view_matrix());
 
-        for (int i = 0; i < 4; i++) {
-            glm::vec3 torch_position = m_point_light_positions[i] + glm::vec3(0.0f, -0.5f, 0.0f);
+        const auto &point_lights = m_light_manager.all_point_lights();
+        for (int i = 0; i < point_lights.size(); i++) {
+            glm::vec3 torch_position = point_lights[i].position + glm::vec3(0.0f, -0.5f, 0.0f);
 
             glm::mat4 model = glm::mat4(1.0f);
             model           = glm::translate(model, torch_position);
@@ -168,6 +148,7 @@ namespace app {
             model = glm::scale(model, glm::vec3(0.02f));
 
             shader->set_mat4("model", model);
+            shader->set_bool("lightOn", point_lights[i].is_on);
             torch->draw(shader);
         }
     }
