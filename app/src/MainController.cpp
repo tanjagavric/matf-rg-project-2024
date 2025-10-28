@@ -4,7 +4,9 @@
 
 #include "MainController.hpp"
 
-#include <WorldBounds.hpp>
+#include <LightController.hpp>
+#include <PuzzleController.hpp>
+#include <WorldBoundsController.hpp>
 #include <engine/graphics/GraphicsController.hpp>
 #include <engine/graphics/OpenGL.hpp>
 #include <engine/platform/PlatformController.hpp>
@@ -25,19 +27,12 @@ namespace app {
     void MainController::initialize() {
         auto platform = get<engine::platform::PlatformController>();
         platform->register_platform_event_observer(std::make_unique<MainPlatformEventObserver>());
+
         engine::graphics::OpenGL::enable_depth_testing();
 
         auto graphics            = get<engine::graphics::GraphicsController>();
         auto camera              = graphics->camera();
         camera->MouseSensitivity = 0.3f;
-
-        m_world_bounds = WorldBounds({-2.5f, 0.0f, -13.0f},
-                                     {2.5f, 2.5f, 7.5f});
-
-        m_light_manager.add_point_light(glm::vec3(-3.7f, 1.2f, -10.0f));
-        m_light_manager.add_point_light(glm::vec3(-3.5f, 1.3f, 2.0f));
-        m_light_manager.add_point_light(glm::vec3(4.6f, 1.1f, -6.0f));
-        m_light_manager.add_point_light(glm::vec3(3.3f, 1.4f, 5.0f));
     }
 
     bool MainController::loop() {
@@ -48,7 +43,7 @@ namespace app {
         return true;
     }
 
-    void MainController::update_camera() {
+    void MainController::update_camera() const {
         auto platform = get<engine::platform::PlatformController>();
         auto graphics = get<engine::graphics::GraphicsController>();
         auto camera   = graphics->camera();
@@ -66,25 +61,23 @@ namespace app {
         if (platform->key(engine::platform::KEY_D).is_down()) {
             camera->move_camera(engine::graphics::Camera::Movement::RIGHT, dt);
         }
-
-        m_world_bounds.clamp_position(camera->Position);
     }
 
     void MainController::update() {
-        auto platform = get<engine::platform::PlatformController>();
         auto graphics = get<engine::graphics::GraphicsController>();
-        m_light_manager.set_spot_light_position(graphics->camera()->Position);
-        m_light_manager.set_spot_light_direction(graphics->camera()->Front);
+        auto light    = get<LightController>();
 
-        if (platform->key(engine::platform::KEY_E).state() == engine::platform::Key::State::JustPressed) {
-            on_puzzle_solved();
-        }
+        light->set_spot_light_position(graphics->camera()->Position);
+        light->set_spot_light_direction(graphics->camera()->Front);
+
         update_camera();
     }
 
-    void MainController::draw_cave() {
-        auto resources                    = get<engine::resources::ResourcesController>();
-        auto graphics                     = get<engine::graphics::GraphicsController>();
+    void MainController::draw_cave() const {
+        auto resources        = get<engine::resources::ResourcesController>();
+        auto graphics         = get<engine::graphics::GraphicsController>();
+        auto light_controller = get<LightController>();
+
         engine::resources::Model *cave    = resources->model("cave");
         engine::resources::Shader *shader = resources->shader("basic");
 
@@ -96,7 +89,7 @@ namespace app {
         model           = glm::scale(model, glm::vec3(3.0f));
         shader->set_mat4("model", model);
 
-        m_light_manager.setup_shader(shader);
+        light_controller->setup_shader(shader);
 
         shader->set_vec3("viewPos", graphics->camera()->Position);
         shader->set_float("shininess", 4.0f);
@@ -114,18 +107,22 @@ namespace app {
         engine::graphics::OpenGL::clear_buffers();
     }
 
-    void MainController::draw_skybox() {
+    void MainController::draw_skybox() const {
         auto resources = get<engine::resources::ResourcesController>();
-        auto skybox    = resources->skybox("night_skybox");
+        auto graphics  = get<engine::graphics::GraphicsController>();
+        auto shader    = resources->shader("skybox");
+        auto puzzle    = get<PuzzleController>();
 
-        auto shader   = resources->shader("skybox");
-        auto graphics = get<engine::graphics::GraphicsController>();
+        const char *skybox_name = puzzle->is_solved() ? "day_skybox" : "night_skybox";
+        auto skybox             = resources->skybox(skybox_name);
+
         graphics->draw_skybox(shader, skybox);
     }
 
-    void MainController::draw_torches() {
+    void MainController::draw_torches() const {
         auto resources                    = get<engine::resources::ResourcesController>();
         auto graphics                     = get<engine::graphics::GraphicsController>();
+        auto light_controller             = get<LightController>();
         engine::resources::Model *torch   = resources->model("torch");
         engine::resources::Shader *shader = resources->shader("torch");
 
@@ -133,7 +130,7 @@ namespace app {
         shader->set_mat4("projection", graphics->projection_matrix<>());
         shader->set_mat4("view", graphics->camera()->view_matrix());
 
-        const auto &point_lights = m_light_manager.all_point_lights();
+        const auto &point_lights = light_controller->all_point_lights();
         for (int i = 0; i < point_lights.size(); i++) {
             glm::vec3 torch_position = point_lights[i].position + glm::vec3(0.0f, -0.5f, 0.0f);
 
@@ -156,13 +153,5 @@ namespace app {
     void MainController::end_draw() {
         auto platform = get<engine::platform::PlatformController>();
         platform->swap_buffers();
-    }
-
-    void MainController::on_puzzle_solved() {
-        spdlog::info("Puzzle solved!");
-        glm::vec3 current_min = m_world_bounds.min_bound();
-        glm::vec3 current_max = m_world_bounds.max_bound();
-        current_min.z -= 10.0f;
-        m_world_bounds.set_bounds(current_min, current_max);
     }
 } // app

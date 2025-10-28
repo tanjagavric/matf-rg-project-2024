@@ -4,42 +4,40 @@
 
 #ifndef MAINCONTROLLER_HPP
 #define MAINCONTROLLER_HPP
-#include <LightManager.hpp>
-#include <WorldBounds.hpp>
 #include <engine/core/Controller.hpp>
+#include <engine/platform/PlatformController.hpp>
 
 namespace app {
     class MainController : public engine::core::Controller {
-        void initialize() override;
-
-        bool loop() override;
-
-        void update_camera();
-
-        void update() override;
-
-        void draw_cave();
-
-        void begin_draw() override;
-
-        void draw_skybox();
-
-        void draw_torches();
-
-        void draw() override;
-
-        void end_draw() override;
-
-        void on_puzzle_solved();
-
     public:
         std::string_view name() const override {
             return "app::MainController";
         }
 
     private:
-        WorldBounds m_world_bounds;
-        LightManager m_light_manager;
+        void initialize() override;
+
+        bool loop() override;
+
+        void update_camera() const;
+
+        void handle_flashlight_input();
+
+        void update() override;
+
+        void draw_cave() const;
+
+        void begin_draw() override;
+
+        void draw_skybox() const;
+
+        void draw_torches() const;
+
+        void draw() override;
+
+        void end_draw() override;
+
+        void reset_puzzle();
     };
 } // app
 

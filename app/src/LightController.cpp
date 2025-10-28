@@ -2,42 +2,49 @@
 // Created by tanja on 10/27/25.
 //
 
-#include "LightManager.hpp"
+#include "LightController.hpp"
+
+#include <engine/platform/PlatformController.hpp>
 
 namespace app {
-    int LightManager::add_point_light(const glm::vec3 &position) {
+    void LightController::initialize() {
+        add_point_light(glm::vec3(-3.7f, 1.2f, -10.0f));
+        add_point_light(glm::vec3(-3.5f, 1.3f, 2.0f));
+        add_point_light(glm::vec3(4.6f, 1.1f, -6.0f));
+        add_point_light(glm::vec3(3.3f, 1.4f, 5.0f));
+    }
+
+    void LightController::update() {
+        auto platform = get<engine::platform::PlatformController>();
+
+        if (platform->key(engine::platform::KEY_F).state() == engine::platform::Key::State::JustPressed) {
+            toggle_spot_light();
+        }
+    }
+
+    void LightController::add_point_light(const glm::vec3 &position) {
         PointLightData light;
         light.position = position;
         m_point_lights.push_back(light);
-        return point_light_count() - 1;
     }
 
-    void LightManager::turn_point_light_on(int index) {
-        if (index >= 0 && index < point_light_count()) {
+    void LightController::turn_point_light_on(const int index) {
+        if (is_valid_index(index)) {
             m_point_lights[index].is_on = true;
         }
     }
 
-    void LightManager::turn_point_light_off(int index) {
-        if (index >= 0 && index < point_light_count()) {
-            m_point_lights[index].is_on = false;
+    void LightController::turn_all_point_lights_off() {
+        for (auto &light: m_point_lights) {
+            light.is_on = false;
         }
     }
 
-    void LightManager::toggle_point_light(int index) {
-        if (index >= 0 && index < point_light_count()) {
-            m_point_lights[index].is_on = !m_point_lights[index].is_on;
-        }
+    bool LightController::is_point_light_on(int index) const {
+        return is_valid_index(index) && m_point_lights[index].is_on;
     }
 
-    bool LightManager::is_point_light_on(int index) const {
-        if (index >= 0 && index < point_light_count()) {
-            return m_point_lights[index].is_on;
-        }
-        return false;
-    }
-
-    void LightManager::setup_shader(engine::resources::Shader *shader) const {
+    void LightController::setup_shader(const engine::resources::Shader *shader) const {
         for (int i = 0; i < point_light_count(); i++) {
             std::string prefix = "pointLights[" + std::to_string(i) + "]";
             const auto &light  = m_point_lights[i];
