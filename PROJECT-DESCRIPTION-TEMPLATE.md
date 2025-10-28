@@ -46,6 +46,7 @@ ESC -> Exit app
 ### Engine improvement:
 
 [ X ] Added emissive texture type
+[ X ] Added audio library
 
 ## Models:
 
