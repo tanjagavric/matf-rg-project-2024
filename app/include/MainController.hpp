@@ -5,7 +5,6 @@
 #ifndef MAINCONTROLLER_HPP
 #define MAINCONTROLLER_HPP
 #include <engine/core/Controller.hpp>
-#include <engine/platform/PlatformController.hpp>
 
 namespace app {
     class MainController : public engine::core::Controller {
@@ -21,8 +20,6 @@ namespace app {
 
         void update_camera() const;
 
-        void handle_flashlight_input();
-
         void update() override;
 
         void draw_cave() const;
@@ -36,8 +33,6 @@ namespace app {
         void draw() override;
 
         void end_draw() override;
-
-        void reset_puzzle();
     };
 } // app
 

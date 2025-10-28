@@ -10,7 +10,8 @@ add_executable(${PROJECT_NAME} ${sources} ${headers}
         src/MainController.cpp
         src/WorldBoundsController.cpp
         src/LightController.cpp
-        src/PuzzleController.cpp)
+        src/PuzzleController.cpp
+        src/AudioController.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE matf-rg-engine)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")

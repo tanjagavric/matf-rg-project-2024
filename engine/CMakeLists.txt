@@ -8,7 +8,7 @@ include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag("-std=c++23" COMPILER_SUPPORTS_CXX23)
 if (NOT COMPILER_SUPPORTS_CXX23)
     message(FATAL_ERROR "The compiler does not support C++23.")
-endif()
+endif ()
 
 file(GLOB engine-sources src/*.cpp)
 file(GLOB engine-headers include/engine/*.hpp)
@@ -27,10 +27,11 @@ cmake_policy(SET CMP0048 NEW)
 set(CMAKE_WARN_DEPRECATED OFF CACHE BOOL "" FORCE)
 add_subdirectory(libs/glm EXCLUDE_FROM_ALL)
 set(CMAKE_WARN_DEPRECATED ON CACHE BOOL "" FORCE)
+add_subdirectory(libs/miniaudio EXCLUDE_FROM_ALL)
 
 add_library(${PROJECT_NAME} ${engine-sources} ${engine-headers})
 target_include_directories(${PROJECT_NAME} PUBLIC include/)
 target_link_libraries(${PROJECT_NAME} PRIVATE glad glfw assimp ${ASSIMP_LIBRARIES} stb
-        PUBLIC glm::glm-header-only spdlog::spdlog imgui json)
+        PUBLIC glm::glm-header-only spdlog::spdlog imgui json miniaudio)
 
 prebuild_check(${PROJECT_NAME})
