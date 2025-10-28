@@ -30,6 +30,8 @@ namespace app {
 
         void draw_torches() const;
 
+        void draw_rupee() const;
+
         void draw() override;
 
         void end_draw() override;

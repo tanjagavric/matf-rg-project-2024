@@ -8,6 +8,10 @@
       "torch": {
         "path": "torch/scene.gltf",
         "flip_uvs": true
+      },
+      "rupee": {
+        "path": "rupee/scene.gltf",
+        "flip_uvs": true
       }
     }
   },

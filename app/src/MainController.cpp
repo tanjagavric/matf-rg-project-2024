@@ -100,6 +100,7 @@ namespace app {
     void MainController::draw() {
         draw_cave();
         draw_torches();
+        draw_rupee();
         draw_skybox();
     }
 
@@ -148,6 +149,31 @@ namespace app {
             shader->set_bool("lightOn", point_lights[i].is_on);
             torch->draw(shader);
         }
+    }
+
+    void MainController::draw_rupee() const {
+        auto resources        = get<engine::resources::ResourcesController>();
+        auto graphics         = get<engine::graphics::GraphicsController>();
+        auto light_controller = get<LightController>();
+
+        engine::resources::Model *rupee   = resources->model("rupee");
+        engine::resources::Shader *shader = resources->shader("basic");
+
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix<>());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model           = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
+        model           = glm::scale(model, glm::vec3(0.05f));
+        shader->set_mat4("model", model);
+
+        light_controller->setup_shader(shader);
+
+        shader->set_vec3("viewPos", graphics->camera()->Position);
+        shader->set_float("shininess", 32.0f);
+
+        rupee->draw(shader);
     }
 
     void MainController::end_draw() {
