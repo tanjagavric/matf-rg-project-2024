@@ -1,0 +1,11 @@
+Model Information:
+* title:	Torch homemade Burning
+* source:	https://sketchfab.com/3d-models/torch-homemade-burning-5e478d2d48d04ca7ae7426430192698f
+* author:	IDALGAME (https://sketchfab.com/IDALGAME)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Torch homemade Burning" (https://sketchfab.com/3d-models/torch-homemade-burning-5e478d2d48d04ca7ae7426430192698f) by IDALGAME (https://sketchfab.com/IDALGAME) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
