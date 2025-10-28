@@ -5,6 +5,7 @@
 #ifndef MAINCONTROLLER_HPP
 #define MAINCONTROLLER_HPP
 #include <engine/core/Controller.hpp>
+#include <glm/fwd.hpp>
 
 namespace app {
     class MainController : public engine::core::Controller {
@@ -35,6 +36,9 @@ namespace app {
         void draw() override;
 
         void end_draw() override;
+
+        glm::mat4 *m_modelMatrices;
+        unsigned int m_amount = 100;
     };
 } // app
 

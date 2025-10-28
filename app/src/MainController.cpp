@@ -33,6 +33,28 @@ namespace app {
         auto graphics            = get<engine::graphics::GraphicsController>();
         auto camera              = graphics->camera();
         camera->MouseSensitivity = 0.3f;
+
+        m_modelMatrices = new glm::mat4[m_amount];
+        srand(static_cast<unsigned int>(time(nullptr)));
+
+        float min_x   = -2.5f;
+        float max_x   = 2.5f;
+        float min_z   = -13.5f;
+        float max_z   = 7.5f;
+        float floor_y = -3.0f;
+
+        for (unsigned int i = 0; i < m_amount; i++) {
+            glm::mat4 model = glm::mat4(1.0f);
+
+            float x = min_x + static_cast<float>(rand()) / RAND_MAX * (max_x - min_x);
+            float z = min_z + static_cast<float>(rand()) / RAND_MAX * (max_z - min_z);
+
+            model = glm::translate(model, glm::vec3(x, floor_y, z));
+
+            model = glm::scale(model, glm::vec3(0.08f));
+
+            m_modelMatrices[i] = model;
+        }
     }
 
     bool MainController::loop() {
@@ -157,21 +179,21 @@ namespace app {
         auto light_controller = get<LightController>();
 
         engine::resources::Model *rupee   = resources->model("rupee");
-        engine::resources::Shader *shader = resources->shader("basic");
+        engine::resources::Shader *shader = resources->shader("rupee");
 
         shader->use();
         shader->set_mat4("projection", graphics->projection_matrix<>());
         shader->set_mat4("view", graphics->camera()->view_matrix());
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model           = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
-        model           = glm::scale(model, glm::vec3(0.05f));
-        shader->set_mat4("model", model);
-
         light_controller->setup_shader(shader);
 
         shader->set_vec3("viewPos", graphics->camera()->Position);
         shader->set_float("shininess", 32.0f);
+
+        for (unsigned int i = 0; i < m_amount; i++) {
+            shader->set_mat4("model", m_modelMatrices[i]);
+            rupee->draw(shader);
+        }
 
         rupee->draw(shader);
     }
