@@ -20,6 +20,7 @@ namespace app {
         float constant     = 1.0f;
         float linear       = 0.5f;
         float quadratic    = 1.0f;
+        float brightness_multiplier = 1.0f;
     };
 
     struct SpotLightData {
@@ -43,6 +44,8 @@ namespace app {
         std::string_view name() const override {
             return "app::LightController";
         }
+
+        void set_point_light_brightness(int index, float brightness_multiplier);
 
     private:
         void initialize() override;

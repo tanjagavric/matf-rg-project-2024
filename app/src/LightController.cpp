@@ -7,6 +7,12 @@
 #include <engine/platform/PlatformController.hpp>
 
 namespace app {
+    void LightController::set_point_light_brightness(int index, float brightness_multiplier) {
+        if (is_valid_index(index)) {
+            m_point_lights[index].brightness_multiplier = brightness_multiplier;
+        }
+    }
+
     void LightController::initialize() {
         add_point_light(glm::vec3(-3.7f, 1.2f, -10.0f));
         add_point_light(glm::vec3(-3.5f, 1.3f, 2.0f));
@@ -51,9 +57,12 @@ namespace app {
 
             shader->set_vec3(prefix + ".position", light.position);
 
-            shader->set_vec3(prefix + ".ambient", light.is_on ? light.ambient : glm::vec3(0.0f));
-            shader->set_vec3(prefix + ".diffuse", light.is_on ? light.diffuse : glm::vec3(0.0f));
-            shader->set_vec3(prefix + ".specular", light.is_on ? light.specular : glm::vec3(0.0f));
+            shader->set_vec3(prefix + ".ambient",
+                             light.is_on ? light.ambient * light.brightness_multiplier : glm::vec3(0.0f));
+            shader->set_vec3(prefix + ".diffuse",
+                             light.is_on ? light.diffuse * light.brightness_multiplier : glm::vec3(0.0f));
+            shader->set_vec3(prefix + ".specular",
+                             light.is_on ? light.specular * light.brightness_multiplier : glm::vec3(0.0f));
 
             shader->set_float(prefix + ".constant", light.constant);
             shader->set_float(prefix + ".linear", light.linear);

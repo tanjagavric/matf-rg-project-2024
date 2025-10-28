@@ -14,14 +14,16 @@ namespace app {
             return "app::PuzzleController";
         }
 
-        bool is_solved() const {
-            return m_solved;
+        bool should_use_day_skybox() const {
+            return m_should_use_day_skybox;
         }
 
     private:
         void update() override;
 
         void update_puzzle_timer();
+
+        void update_light_brightness();
 
         void handle_light_input();
 
@@ -43,10 +45,12 @@ namespace app {
 
         void reset_puzzle();
 
-        bool m_solved = false;
-        bool m_active = false;
+        bool m_solved                = false;
+        bool m_active                = false;
+        bool m_should_use_day_skybox = false;
         std::vector<int> m_light_sequence;
-        float m_puzzle_timer = 0.0f;
+        float m_puzzle_timer     = 0.0f;
+        float m_brightness_timer = 0.0f;
 
         static constexpr std::array<int, 4> CORRECT_SEQUENCE = {3, 1, 0, 2}; // 4, 2, 1, 3 (0-indexed)
         static constexpr float PUZZLE_TIME_LIMIT             = 10.0f;

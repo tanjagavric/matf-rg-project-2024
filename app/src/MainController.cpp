@@ -113,7 +113,7 @@ namespace app {
         auto shader    = resources->shader("skybox");
         auto puzzle    = get<PuzzleController>();
 
-        const char *skybox_name = puzzle->is_solved() ? "day_skybox" : "night_skybox";
+        const char *skybox_name = puzzle->should_use_day_skybox() ? "day_skybox" : "night_skybox";
         auto skybox             = resources->skybox(skybox_name);
 
         graphics->draw_skybox(shader, skybox);

@@ -13,6 +13,7 @@
 namespace app {
     void PuzzleController::update() {
         if (m_solved) {
+            update_light_brightness();
             return;
         }
 
@@ -81,6 +82,24 @@ namespace app {
         }
     }
 
+    void PuzzleController::update_light_brightness() {
+        auto platform = get<engine::platform::PlatformController>();
+        auto light    = get<LightController>();
+
+        m_brightness_timer += platform->dt();
+
+        float progress   = std::min(m_brightness_timer / 3.0f, 1.0f);
+        float brightness = 1.0f + progress * 5.0f; // Interpolate
+
+        for (int i = 0; i < light->point_light_count(); i++) {
+            light->set_point_light_brightness(i, brightness);
+        }
+
+        if (m_brightness_timer >= 3.0f) {
+            m_should_use_day_skybox = true;
+        }
+    }
+
     void PuzzleController::record_light_in_sequence(int index) {
         m_light_sequence.push_back(index);
         spdlog::info("Light {} turned on. Sequence: {} / {}",
@@ -108,7 +127,8 @@ namespace app {
     }
 
     void PuzzleController::solve_puzzle() {
-        m_solved = true;
+        m_solved           = true;
+        m_brightness_timer = 0.0f;
         spdlog::info("Puzzle solved!");
 
         auto world_bounds = get<WorldBoundsController>();
