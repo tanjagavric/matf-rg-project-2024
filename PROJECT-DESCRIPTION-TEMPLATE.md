@@ -1,9 +1,21 @@
 # Echoes of light
 
 mr19099 - Tanja Gavric
-{PROJECT DESCRIPTION}
+
+You awaken in a silent cave, your flashlight flickering against ancient stone.
+The exit stands before you, yet an unseen force bars your way.
+Torches line the walls, their carvings whispering of an old trial.
+Light them in the sacred order, and the seal will fade — fail, and the darkness will claim your path once more.
 
 ## Controls
+
+Time limit: 10 seconds to light all 4 torches. Failure causes all torches to extinguish.
+
+{LIGHT_TORCHES_IN_CORRECT_ORDER} ---> {CAVE_EXIT_ENABLED} ---> {LIGHT_GRADUALLY_INCREASES}---> {SKYBOX_CHANGES}
+
+1/2/3/4 -> Light on the 1/2/3/4 torch on the wall
+
+F -> Toggle flashlight
 
 W, A, S, D -> Move camera
 
@@ -15,7 +27,7 @@ ESC -> Exit app
 
 [ X ] Model with lighting
 [ X ] Two types of lighting with customizable colors and movement through GUI or ACTIONS
-[ ] {ACTION_X} --- AFTER_M_SECONDS---Triggers---> {EVENT_A} ---> AFTER_N_SECONDS---Triggers---> {EVENT_B}
+[ X ] {ACTION_X} --- AFTER_M_SECONDS---Triggers---> {EVENT_A} ---> AFTER_N_SECONDS---Triggers---> {EVENT_B}
 
 ### Group A:
 
@@ -47,4 +59,5 @@ Torch [ https://sketchfab.com/3d-models/torch-homemade-burning-5e478d2d48d04ca7a
 
 ## Skyboxes
 
-Day and night skybox [ https://www.planetminecraft.com/texture-pack/legend-of-zelda-breath-of-the-wild-sky-background/ ]
+Day and night
+skyboxes [ https://www.planetminecraft.com/texture-pack/legend-of-zelda-breath-of-the-wild-sky-background/ ]
