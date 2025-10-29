@@ -1,11 +1,27 @@
 {
   "resources": {
     "models": {
+      "cave": {
+        "path": "cave/cave.obj",
+        "flip_uvs": true
+      },
+      "torch": {
+        "path": "torch/scene.gltf",
+        "flip_uvs": true
+      },
+      "rupee": {
+        "path": "rupee/scene.gltf",
+        "flip_uvs": true
+      },
+      "ground": {
+        "path": "ground/scene.gltf",
+        "flip_uvs": true
+      }
     }
   },
   "window": {
     "height": 600,
-    "title": "Hello, window!",
+    "title": "Echoes of Light",
     "width": 800
   }
 }
