@@ -130,6 +130,7 @@ namespace app {
         draw_cave();
         draw_torches();
         draw_rupees();
+        draw_ground();
         draw_skybox();
     }
 
@@ -202,6 +203,31 @@ namespace app {
         shader->set_float("shininess", 32.0f);
 
         rupee->draw_instanced(shader);
+    }
+
+    void MainController::draw_ground() const {
+        auto resources        = get<engine::resources::ResourcesController>();
+        auto graphics         = get<engine::graphics::GraphicsController>();
+        auto light_controller = get<LightController>();
+
+        engine::resources::Model *ground  = resources->model("ground");
+        engine::resources::Shader *shader = resources->shader("basic");
+
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix<>());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model           = glm::translate(model, glm::vec3(0.0f, -3.7f, 0.0f));
+        model           = glm::scale(model, glm::vec3(500.0f));
+        shader->set_mat4("model", model);
+
+        light_controller->setup_shader(shader);
+
+        shader->set_vec3("viewPos", graphics->camera()->Position);
+        shader->set_float("shininess", 4.0f);
+
+        ground->draw(shader);
     }
 
     void MainController::end_draw() {

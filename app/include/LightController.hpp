@@ -14,12 +14,12 @@ namespace app {
         glm::vec3 position;
         bool is_on = false;
 
-        glm::vec3 ambient  = glm::vec3(0.2f, 0.15f, 0.05f); // Dim orange
-        glm::vec3 diffuse  = glm::vec3(1.5f, 0.9f, 0.3f);   // Bright orange
-        glm::vec3 specular = glm::vec3(1.0f, 0.8f, 0.4f);   // Warm highlight
-        float constant     = 1.0f;
-        float linear       = 0.5f;
-        float quadratic    = 1.0f;
+        glm::vec3 ambient           = glm::vec3(0.2f, 0.15f, 0.05f); // Dim orange
+        glm::vec3 diffuse           = glm::vec3(1.5f, 0.9f, 0.3f);   // Bright orange
+        glm::vec3 specular          = glm::vec3(1.0f, 0.8f, 0.4f);   // Warm highlight
+        float constant              = 1.0f;
+        float linear                = 0.5f;
+        float quadratic             = 1.0f;
         float brightness_multiplier = 1.0f;
     };
 
@@ -37,6 +37,15 @@ namespace app {
         float constant     = 1.0f;
         float linear       = 0.09f;
         float quadratic    = 0.032f;
+    };
+
+    struct DirLightData {
+        bool is_on          = false;
+        glm::vec3 direction = glm::vec3(-0.2f, -1.0f, -0.3f);
+
+        glm::vec3 ambient  = glm::vec3(0.3f, 0.3f, 0.35f);
+        glm::vec3 diffuse  = glm::vec3(0.8f, 0.8f, 0.7f);
+        glm::vec3 specular = glm::vec3(0.5f, 0.5f, 0.5f);
     };
 
     class LightController : public engine::core::Controller {
@@ -81,6 +90,10 @@ namespace app {
             m_spot_light.is_on = !m_spot_light.is_on;
         }
 
+        void turn_dir_light_on() {
+            m_dir_light.is_on = true;
+        }
+
         void setup_shader(const engine::resources::Shader *shader) const;
 
     private:
@@ -90,6 +103,7 @@ namespace app {
 
         std::vector<PointLightData> m_point_lights{};
         SpotLightData m_spot_light = SpotLightData();
+        DirLightData m_dir_light   = DirLightData();
     };
 } // app
 

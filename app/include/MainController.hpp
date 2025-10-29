@@ -34,6 +34,8 @@ namespace app {
 
         void draw_rupees() const;
 
+        void draw_ground() const;
+
         void draw() override;
 
         void end_draw() override;

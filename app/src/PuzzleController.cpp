@@ -95,8 +95,9 @@ namespace app {
             light->set_point_light_brightness(i, brightness);
         }
 
-        if (m_brightness_timer >= 3.0f) {
+        if (m_brightness_timer >= 10.0f) {
             m_should_use_day_skybox = true;
+            light->turn_dir_light_on();
         }
     }
 

@@ -51,6 +51,12 @@ namespace app {
     }
 
     void LightController::setup_shader(const engine::resources::Shader *shader) const {
+        shader->set_vec3("dirLight.direction", m_dir_light.direction);
+
+        shader->set_vec3("dirLight.ambient", m_dir_light.is_on ? m_dir_light.ambient : glm::vec3(0.0f));
+        shader->set_vec3("dirLight.diffuse", m_dir_light.is_on ? m_dir_light.diffuse : glm::vec3(0.0f));
+        shader->set_vec3("dirLight.specular", m_dir_light.is_on ? m_dir_light.specular : glm::vec3(0.0f));
+
         for (int i = 0; i < point_light_count(); i++) {
             std::string prefix = "pointLights[" + std::to_string(i) + "]";
             const auto &light  = m_point_lights[i];

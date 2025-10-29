@@ -12,6 +12,10 @@
       "rupee": {
         "path": "rupee/scene.gltf",
         "flip_uvs": true
+      },
+      "ground": {
+        "path": "ground/scene.gltf",
+        "flip_uvs": true
       }
     }
   },

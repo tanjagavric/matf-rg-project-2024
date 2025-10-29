@@ -11,7 +11,7 @@ Light them in the sacred order, and the seal will fade — fail, and the darknes
 
 Time limit: 10 seconds to light all 4 torches. Failure causes all torches to extinguish.
 
-{LIGHT_TORCHES_IN_CORRECT_ORDER} ---> {CAVE_EXIT_ENABLED} ---> {LIGHT_GRADUALLY_INCREASES}---> {SKYBOX_CHANGES}
+{LIGHT_TORCHES_IN_CORRECT_ORDER} ---> {CAVE_EXIT_ENABLED} ---> {LIGHT_GRADUALLY_INCREASES} ---> {SKYBOX_CHANGES}
 
 1/2/3/4 -> Light on the 1/2/3/4 torch on the wall
 
@@ -47,17 +47,18 @@ ESC -> Exit app
 
 [ X ] Added emissive texture type
 [ X ] Added audio library
+[ X ] Added instancing to Model and Mesh
 
 ## Models:
 
 Cave [ https://www.fab.com/listings/9f3c22f3-cd5a-40ef-8a8d-768b46d7fda4 ]
 Torch [ https://sketchfab.com/3d-models/torch-homemade-burning-5e478d2d48d04ca7ae7426430192698f ]
 Rupee [ https://sketchfab.com/3d-models/green-rupee-the-legend-of-zelda-oot-087eddf3d9914993943825a6b3d29441 ]
+Ground [ https://sketchfab.com/3d-models/ground-535f79432a3d48619dd1fdd8500b0beb ]
 
 ## Textures
 
-[link1]  
-[link2]
+No texture packs used.
 
 ## Skyboxes
 
