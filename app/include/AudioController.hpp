@@ -13,6 +13,12 @@ namespace app {
 
         void terminate() override;
 
+    public:
+        std::string_view name() const override {
+            return "app::AudioController";
+        };
+
+    private:
         ma_engine m_audio_engine_ = {};
         ma_sound m_music_         = {};
     };
