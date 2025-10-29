@@ -18,6 +18,10 @@ namespace app {
             return m_should_use_day_skybox;
         }
 
+        bool is_solved() const {
+            return m_solved;
+        }
+
     private:
         void update() override;
 

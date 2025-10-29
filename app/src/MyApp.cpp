@@ -10,15 +10,15 @@
 namespace app {
     void MyApp::app_setup() {
         spdlog::info("Hello, MyApp::app_setup");
-        auto main_controller         = register_controller<MainController>();
         auto world_bounds_controller = register_controller<WorldBoundsController>();
-        auto puzzle_controller       = register_controller<PuzzleController>();
+        auto main_controller         = register_controller<MainController>();
         auto light_controller        = register_controller<LightController>();
+        auto puzzle_controller       = register_controller<PuzzleController>();
         auto audio_controller        = register_controller<AudioController>();
-        main_controller->after(engine::core::Controller::get<engine::core::EngineControllersEnd>());
+        world_bounds_controller->after(engine::core::Controller::get<engine::core::EngineControllersEnd>());
+        main_controller->after(world_bounds_controller);
         light_controller->after(main_controller);
-        world_bounds_controller->after(light_controller);
-        puzzle_controller->after(world_bounds_controller);
+        puzzle_controller->after(light_controller);
         audio_controller->after(puzzle_controller);
     }
 } // app

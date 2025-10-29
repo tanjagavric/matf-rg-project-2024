@@ -1,8 +1,11 @@
+#include <iosfwd>
 #include<glad/glad.h>
 #include <engine/util/Utils.hpp>
 #include <engine/resources/Mesh.hpp>
 #include <engine/resources/Shader.hpp>
 #include <unordered_map>
+#include <vector>
+#include <engine/graphics/Camera.hpp>
 
 namespace engine::resources {
 
@@ -67,4 +70,43 @@ void Mesh::destroy() {
     glDeleteVertexArrays(1, &m_vao);
 }
 
+    void Mesh::setup_instancing() {
+        unsigned int VAO = m_vao;
+        glBindVertexArray(VAO);
+
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *) 0);
+        glEnableVertexAttribArray(4);
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *) (sizeof(glm::vec4)));
+        glEnableVertexAttribArray(5);
+        glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *) (2 * sizeof(glm::vec4)));
+        glEnableVertexAttribArray(6);
+        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *) (3 * sizeof(glm::vec4)));
+
+        glVertexAttribDivisor(3, 1);
+        glVertexAttribDivisor(4, 1);
+        glVertexAttribDivisor(5, 1);
+        glVertexAttribDivisor(6, 1);
+
+        glBindVertexArray(0);
+    }
+
+    void Mesh::draw_instanced(Shader *shader, unsigned int instance_amount) const {
+        std::unordered_map<std::string_view, uint32_t> counts;
+        std::string uniform_name;
+        uniform_name.reserve(32);
+        for (int i = 0; i < m_textures.size(); i++) {
+            glActiveTexture(GL_TEXTURE0 + i);
+            const auto &texture_type = Texture::uniform_name_convention(m_textures[i]->type());
+            uniform_name.append(texture_type);
+            const auto count = (counts[texture_type] += 1);
+            uniform_name.append(std::to_string(count));
+            shader->set_int(uniform_name, i);
+            glBindTexture(GL_TEXTURE_2D, m_textures[i]->id());
+            uniform_name.clear();
+        }
+        glBindVertexArray(m_vao);
+        glDrawElementsInstanced(GL_TRIANGLES, m_num_indices, GL_UNSIGNED_INT, 0, instance_amount);
+        glBindVertexArray(0);
+    }
 }

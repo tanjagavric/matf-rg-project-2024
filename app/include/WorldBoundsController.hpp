@@ -25,6 +25,22 @@ namespace app {
 
         void clamp_position(glm::vec3 &position) const;
 
+        float min_x() const {
+            return m_min_bound.x;
+        }
+
+        float max_x() const {
+            return m_max_bound.x;
+        }
+
+        float min_z() const {
+            return m_min_bound.z;
+        }
+
+        float max_z() const {
+            return m_max_bound.z;
+        }
+
     private:
         glm::vec3 m_min_bound{};
         glm::vec3 m_max_bound{};

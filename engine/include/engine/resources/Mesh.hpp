@@ -44,15 +44,30 @@ public:
     */
     void destroy();
 
-private:
-    /**
-    * @brief Constructs a Mesh object.
-    * @param vertices The vertices in the mesh.
-    * @param indices The indices in the mesh.
-    * @param textures The textures in the mesh.
-     */
-    Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices,
-         std::vector<Texture *> textures);
+        /**
+        * @brief Prepares mesh vertex buffers for instanced rendering.
+        * @note Internal method used by setup_instancing(const std::vector<glm::mat4>&).
+        */
+        void setup_instancing();
+
+        /**
+        * @brief Draws the specified number of mesh instances using instanced rendering.
+        *
+        * @param shader The shader to use for drawing. Must support instanced rendering.
+        * @param instance_amount The number of instances to render.
+        * @note Internal method called by draw_instanced(Shader*).
+        */
+        void draw_instanced(Shader *shader, unsigned int instance_amount) const;
+
+    private:
+        /**
+        * @brief Constructs a Mesh object.
+        * @param vertices The vertices in the mesh.
+        * @param indices The indices in the mesh.
+        * @param textures The textures in the mesh.
+         */
+        Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices,
+             std::vector<Texture *> textures);
 
     uint32_t m_vao{0};
     uint32_t m_num_indices{0};

@@ -32,7 +32,7 @@ ESC -> Exit app
 ### Group A:
 
 [ ] Frame-buffers with post-processing   
-[ ] Instancing  
+[ X ] Instancing  
 [ ] Off-screen Anti-Aliasing  
 [ ] Parallax Mapping
 
@@ -52,6 +52,7 @@ ESC -> Exit app
 
 Cave [ https://www.fab.com/listings/9f3c22f3-cd5a-40ef-8a8d-768b46d7fda4 ]
 Torch [ https://sketchfab.com/3d-models/torch-homemade-burning-5e478d2d48d04ca7ae7426430192698f ]
+Rupee [ https://sketchfab.com/3d-models/green-rupee-the-legend-of-zelda-oot-087eddf3d9914993943825a6b3d29441 ]
 
 ## Textures
 

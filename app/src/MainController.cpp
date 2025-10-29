@@ -24,6 +24,33 @@ namespace app {
         camera->rotate_camera(position.dx, position.dy);
     }
 
+    void MainController::setup_rupee_instances() {
+        unsigned int amount = 100;
+        std::vector<glm::mat4> modelMatrices(amount);
+        srand(static_cast<unsigned int>(time(nullptr)));
+
+        auto world_bounds = get<WorldBoundsController>();
+        float floor_y     = -3.0f;
+
+        for (unsigned int i = 0; i < amount; i++) {
+            glm::mat4 model = glm::mat4(1.0f);
+
+            float x = world_bounds->min_x() + static_cast<float>(rand()) / RAND_MAX * (
+                          world_bounds->max_x() - world_bounds->min_x());
+            float z = world_bounds->min_z() + static_cast<float>(rand()) / RAND_MAX * (
+                          world_bounds->max_z() - world_bounds->min_z());
+
+            model = glm::translate(model, glm::vec3(x, floor_y, z));
+            model = glm::scale(model, glm::vec3(0.08f));
+
+            modelMatrices[i] = model;
+        }
+
+        auto resources = get<engine::resources::ResourcesController>();
+        auto rupee     = resources->model("rupee");
+        rupee->setup_instancing(modelMatrices);
+    }
+
     void MainController::initialize() {
         auto platform = get<engine::platform::PlatformController>();
         platform->register_platform_event_observer(std::make_unique<MainPlatformEventObserver>());
@@ -34,27 +61,7 @@ namespace app {
         auto camera              = graphics->camera();
         camera->MouseSensitivity = 0.3f;
 
-        m_modelMatrices = new glm::mat4[m_amount];
-        srand(static_cast<unsigned int>(time(nullptr)));
-
-        float min_x   = -2.5f;
-        float max_x   = 2.5f;
-        float min_z   = -13.5f;
-        float max_z   = 7.5f;
-        float floor_y = -3.0f;
-
-        for (unsigned int i = 0; i < m_amount; i++) {
-            glm::mat4 model = glm::mat4(1.0f);
-
-            float x = min_x + static_cast<float>(rand()) / RAND_MAX * (max_x - min_x);
-            float z = min_z + static_cast<float>(rand()) / RAND_MAX * (max_z - min_z);
-
-            model = glm::translate(model, glm::vec3(x, floor_y, z));
-
-            model = glm::scale(model, glm::vec3(0.08f));
-
-            m_modelMatrices[i] = model;
-        }
+        setup_rupee_instances();
     }
 
     bool MainController::loop() {
@@ -122,7 +129,7 @@ namespace app {
     void MainController::draw() {
         draw_cave();
         draw_torches();
-        draw_rupee();
+        draw_rupees();
         draw_skybox();
     }
 
@@ -173,7 +180,11 @@ namespace app {
         }
     }
 
-    void MainController::draw_rupee() const {
+    void MainController::draw_rupees() const {
+        auto puzzle = get<PuzzleController>();
+        if (!puzzle->is_solved()) {
+            return;
+        }
         auto resources        = get<engine::resources::ResourcesController>();
         auto graphics         = get<engine::graphics::GraphicsController>();
         auto light_controller = get<LightController>();
@@ -190,12 +201,7 @@ namespace app {
         shader->set_vec3("viewPos", graphics->camera()->Position);
         shader->set_float("shininess", 32.0f);
 
-        for (unsigned int i = 0; i < m_amount; i++) {
-            shader->set_mat4("model", m_modelMatrices[i]);
-            rupee->draw(shader);
-        }
-
-        rupee->draw(shader);
+        rupee->draw_instanced(shader);
     }
 
     void MainController::end_draw() {

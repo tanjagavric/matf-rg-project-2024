@@ -5,7 +5,6 @@
 #ifndef MAINCONTROLLER_HPP
 #define MAINCONTROLLER_HPP
 #include <engine/core/Controller.hpp>
-#include <glm/fwd.hpp>
 
 namespace app {
     class MainController : public engine::core::Controller {
@@ -15,6 +14,8 @@ namespace app {
         }
 
     private:
+        void setup_rupee_instances();
+
         void initialize() override;
 
         bool loop() override;
@@ -31,14 +32,11 @@ namespace app {
 
         void draw_torches() const;
 
-        void draw_rupee() const;
+        void draw_rupees() const;
 
         void draw() override;
 
         void end_draw() override;
-
-        glm::mat4 *m_modelMatrices;
-        unsigned int m_amount = 100;
     };
 } // app
 
